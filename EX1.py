@@ -1,45 +1,28 @@
-class Employe:
-    def __init__(self, nom, salaire_base):
-        self.nom = nom
-        self.salaire_base = salaire_base
+class Animal:
+    def parler(self):
+        raise NotImplementedError("Cette méthode doit être redéfinie")
 
-    def salaire_total(self):
-        return self.salaire_base
+class Chien(Animal):
+    def parler(self):
+        return "Ouaf !"
 
-    def __str__(self):
-        return f"{self.nom} gagne {self.salaire_total()} €"
+class Chat(Animal):
+    def parler(self):
+        return "Miaou !"
 
+class Vache(Animal):
+    def parler(self):
+        return "Meuh !"
 
-class Manager(Employe):
-    def __init__(self, nom, salaire_base, prime):
-        super().__init__(nom, salaire_base)
-        self.prime = prime
+# Exemple de duck typing
+class Robot:
+    def parler(self):
+        return "Bip bip !"
 
-    def salaire_total(self):
-        return self.salaire_base + self.prime
+def faire_parler(animal):
+    print(animal.parler())
 
-    def __str__(self):
-        return f"Manager {self.nom} gagne {self.salaire_total()} €"
-
-
-class Developpeur(Employe):
-    def __init__(self, nom, salaire_base, technologie):
-        super().__init__(nom, salaire_base)
-        self.technologie = technologie
-
-    def salaire_total(self):
-        bonus = 500 if self.technologie == 'Python' else 300
-        return self.salaire_base + bonus
-
-    def __str__(self):
-        return f"Développeur {self.nom} ({self.technologie}) gagne {self.salaire_total()} €"
-
-
-# Test
-if __name__ == '__main__':
-    e = Employe("Alice", 2000)
-    m = Manager("Bob", 2500, 800)
-    d = Developpeur("Charlie", 2200, "Python")
-
-    for personne in [e, m, d]:
-        print(personne)
+if __name__ == "__main__":
+    animaux = [Chien(), Chat(), Vache(), Robot()]
+    for a in animaux:
+        faire_parler(a)

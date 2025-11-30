@@ -1,76 +1,47 @@
-import json
-from datetime import datetime
+from abc import ABC, abstractmethod
+import math
 
-class Document:
-    def __init__(self, titre, annee):
-        self.titre = titre
-        self.annee = annee
+class Forme(ABC):
+    @abstractmethod
+    def aire(self):
+        pass
 
-    def afficher(self):
-        print(f"{self.titre} ({self.annee})")
+    def __str__(self):
+        return f"{self.__class__.__name__} – aire : {self.aire():.2f}"
 
-    def est_recent(self):
-        """Un document est récent s’il a moins de 5 ans."""
-        return (datetime.now().year - self.annee) <= 5
+class Cercle(Forme):
+    def __init__(self, rayon):
+        self.rayon = rayon
 
+    def aire(self):
+        return math.pi * self.rayon ** 2
 
-class Livre(Document):
-    def __init__(self, titre, annee, auteur):
-        super().__init__(titre, annee)
-        self.auteur = auteur
+class Rectangle(Forme):
+    def __init__(self, largeur, hauteur):
+        self.largeur = largeur
+        self.hauteur = hauteur
 
-    def afficher(self):
-        print(f"Livre: {self.titre} par {self.auteur} ({self.annee})")
+    def aire(self):
+        return self.largeur * self.hauteur
 
+class Triangle(Forme):
+    def __init__(self, base, hauteur):
+        self.base = base
+        self.hauteur = hauteur
 
-class Magazine(Document):
-    def __init__(self, titre, annee, numero):
-        super().__init__(titre, annee)
-        self.numero = numero
+    def aire(self):
+        return 0.5 * self.base * self.hauteur
 
-    def afficher(self):
-        print(f"Magazine: {self.titre} No. {self.numero} ({self.annee})")
+class Carre(Rectangle):
+    def __init__(self, cote):
+        super().__init__(cote, cote)
 
-
-class Bibliotheque:
-    def __init__(self):
-        self.documents = []
-
-    def ajouter(self, doc):
-        self.documents.append(doc)
-
-    def rechercher(self, titre):
-        for doc in self.documents:
-            if doc.titre.lower() == titre.lower():
-                return doc
-        return None
-
-    def afficher_tous(self):
-        for doc in self.documents:
-            doc.afficher()
-
-    def to_json(self):
-        return json.dumps([doc.__dict__ for doc in self.documents], ensure_ascii=False, indent=4)
-
-
-# Test
-if __name__ == '__main__':
-    biblio = Bibliotheque()
-    biblio.ajouter(Livre("1984", 1949, "George Orwell"))
-    biblio.ajouter(Magazine("Science & Vie", 2023, 456))
-    biblio.ajouter(Livre("Le Petit Prince", 1943, "Antoine de Saint-Exupéry"))
-
-    print("=== Affichage des documents ===")
-    biblio.afficher_tous()
-
-    print("\n=== Recherche ===")
-    doc = biblio.rechercher("1984")
-    if doc:
-        doc.afficher()
-
-    print("\n=== Vérification de la récence ===")
-    for d in biblio.documents:
-        print(f"{d.titre} est récent ? {d.est_recent()}")
-
-    print("\n=== Sérialisation JSON ===")
-    print(biblio.to_json())
+if __name__ == "__main__":
+    formes = [
+        Cercle(3),
+        Rectangle(4, 5),
+        Triangle(6, 2),
+        Carre(4)
+    ]
+    for f in formes:
+        print(f)
